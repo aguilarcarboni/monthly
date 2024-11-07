@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  font-family: var(--font-rubik);
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+* {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+@layer base {
+  * {
+    @apply border-muted;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 14%; 
+    --subtitle: 215 16% 47%;
+    --muted: 210 40% 96%;
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: 0 0% 14%;
+    --foreground:  0 0% 100%;
+    --subtitle: 215 16% 80%;
+    --muted: 0 0% 20%;
+    --radius: 0.5rem;
+  }
+}
+
+.markdown > * {
+  all: revert;
+}
+
+.markdown img {
+  @apply rounded-md;
+}
+
+.shimmer-text-blue {
+  background: linear-gradient(90deg, #3b82f6, #38bdf8, #3b82f6);
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: gradient 3s linear infinite;
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animated-gradient-text {
+  background: linear-gradient(90deg, #3b82f6, #ec4899, #3b82f6);
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: gradient 3s linear infinite;
+}
