@@ -4,18 +4,6 @@
 
 This project is a web application that does stuff!
 
-## Sprint 1
-
-### User stories
-- Do something
-- Do something else
-- Do something more
-
-### Tasks
-- [x] Task 1
-- [ ] Task 2
-- [ ] Task 3
-
 ## Prerequisites
 
 Verify Node installation
@@ -49,4 +37,4 @@ yarn
 yarn dev
 ```
 
-# created by [@aguilarcarboni](https://github.com/aguilarcarboni), [@JenVicen](https://github.com/JenVicente) and [@Dampmar](https://github.com/Dampmar)
+## created by [@aguilarcarboni](https://github.com/aguilarcarboni), [@JenVicen](https://github.com/JenVicente) and [@Dampmar](https://github.com/Dampmar)
