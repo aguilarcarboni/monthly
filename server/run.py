@@ -12,27 +12,13 @@ from app.helpers.logger import logger
 from dotenv import load_dotenv
 load_dotenv()
 
-
-def configure_logging(app):
-    if not os.path.exists('logs'):
-        os.mkdir('logs')
-    file_handler = RotatingFileHandler('logs/api.log', maxBytes=10240, backupCount=10)
-    file_handler.setFormatter(logging.Formatter(
-        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
-    ))
-    logger.info('API startup')
-
 def create_app():
     app = Flask(__name__)
     cors = CORS(app, resources={r"/*": {"origins": "*"}})
     app.config['CORS_HEADERS'] = 'Content-Type'
-    app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
-    jwt = JWTManager(app)
 
-    configure_logging(app)
-
-    from app.routes import main
-    app.register_blueprint(main.bp, url_prefix='/main')
+    from app.routes import database
+    app.register_blueprint(database.bp, url_prefix='/database')
 
     @app.route('/', methods=['GET'])
     def index():
@@ -53,3 +39,4 @@ def create_app():
     return app
 
 app = create_app()
+logger.announcement('API initialized', 'success')

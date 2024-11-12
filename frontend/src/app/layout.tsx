@@ -8,7 +8,7 @@ import { Toaster } from '@/components/ui/toaster'
 import { Analytics } from "@vercel/analytics/react"
 
 export const metadata: Metadata = {
-  title: 'software engineering project',
+  title: 'Software Engineering Project',
 };
 
 export default function RootLayout({

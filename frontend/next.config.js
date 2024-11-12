@@ -3,7 +3,7 @@ const nextConfig = {
     output: 'standalone',
     reactStrictMode: false,
     env: {
-        ATHENA_API_URL: process.env.ATHENA_API_URL,
+        API_URL: process.env.API_URL,
     }
 }
 
