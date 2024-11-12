@@ -1,6 +1,6 @@
 # Personal
+*.DS_Store
 cache/
-*.env
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -165,7 +165,7 @@ cython_debug/
 #.idea/
 
 
-*.DS_Store
+# Next.js
 
 # Logs
 logs
