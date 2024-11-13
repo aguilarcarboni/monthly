@@ -1,10 +1,12 @@
-# Software Engineering Project
+# Bill Tracker
 
-## Description
+## Software Engineering
+
+### Description
 
 This project is a web application that does stuff!
 
-## Prerequisites
+### Prerequisites
 
 Verify Node installation
 ```bash
@@ -20,7 +22,7 @@ Install yarn
 npm install --global yarn
 ```
 
-## Running the API
+### Running the API
 
 Install yarn
 ```bash
@@ -29,7 +31,7 @@ cd server
 
 ```
 
-## Running the frontend
+### Running the frontend
 
 ```bash
 cd ../frontend
@@ -37,4 +39,10 @@ yarn
 yarn dev
 ```
 
-## created by [@aguilarcarboni](https://github.com/aguilarcarboni), [@JenVicen](https://github.com/JenVicente) and [@Dampmar](https://github.com/Dampmar)
+
+### Results 
+
+### Contact
+
+
+### created by [@aguilarcarboni](https://github.com/aguilarcarboni), [@JenVicen](https://github.com/JenVicente) and [@Dampmar](https://github.com/Dampmar)
