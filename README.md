@@ -24,7 +24,12 @@ npm install --global yarn
 
 ### Running the API
 
-Install yarn
+Install the dependencies
+```bash
+pip install -r requirements.txt
+```
+
+Run the server
 ```bash
 cd server
 ./run.sh
