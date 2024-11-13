@@ -15,7 +15,7 @@ export async function accessAPI(url: string, type: string, params?: Map, binary?
             ...(type === 'POST' && { body: JSON.stringify(params) }),
         };
 
-        const response = await fetch(`${process.env.API_URL}${url}`, options);
+        const response = await fetch(`127.0.0.1:8000${url}`, options);
         if (!response.ok) {
             throw new Error(`Error fetching data: ${response.statusText}`);
         }
