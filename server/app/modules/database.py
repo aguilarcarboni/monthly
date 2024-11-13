@@ -1,10 +1,11 @@
-from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy import create_engine, Column, Integer, String, Table, MetaData
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
-from typing import List
 from app.helpers.logger import logger
 from app.helpers.response import Response
 import os
+from functools import wraps
 
 Base = declarative_base()
 
@@ -16,64 +17,122 @@ class Interest(Base):
     name = Column(String, unique=True)
     keywords = Column(String)
 
-class Database:
+logger.announcement('Initializing Database Service', 'info')
 
-    def __init__(self):
-        
-        logger.announcement('Initializing Database Service', 'info')
+db_path = os.path.join(os.path.dirname(__file__), '..', 'db', 'news.db')
+db_url = f'sqlite:///{db_path}'
 
-        db_path = os.path.join(os.path.dirname(__file__), '..', 'db', 'news.db')
-        db_url = f'sqlite:///{db_path}'
+engine = create_engine(db_url)
+Base.metadata.create_all(engine)
 
-        self.engine = create_engine(db_url)
-        Base.metadata.create_all(self.engine)
+metadata = MetaData()
+metadata.reflect(bind=engine)
+logger.announcement('Database Service initialized', 'success')
 
-        self.add_interest('Technology', ['AI', 'machine learning', 'deep learning', 'neural networks', 'artificial intelligence', 'machine learning', 'deep learning', 'neural networks', 'artificial intelligence'])
-        self.add_interest('Business', ['stock market', 'investing', 'finance', 'economy', 'markets', 'business', 'economics', 'market', 'stocks', 'investing', 'finance', 'economy', 'markets', 'business', 'economics', 'market', 'stocks', 'investing', 'finance', 'economy', 'markets', 'business', 'economics', 'market', 'stocks'])
+def with_session(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        session = Session(bind=engine)
+        try:
+            result = func(session, *args, **kwargs)
+            session.commit()
+            return result
+        except Exception as e:
+            session.rollback()
+            logger.error(f"Database error in {func.__name__}: {str(e)}")
+            return Response.error(f"Database error: {str(e)}")
+        finally:
+            session.close()
+    return wrapper
 
-        logger.announcement('Database Service initialized', 'success')
+@with_session
+def create(session, table: str, data: dict):
+    logger.info(f'Attempting to create new entry in table: {table}')
+
+    try:
+        tbl = Table(table, metadata, autoload_with=engine)
+        new_record = tbl.insert().values(**data)
+        result = session.execute(new_record)
+        session.flush()
+        new_id = result.inserted_primary_key[0]
+        logger.success(f'Successfully created entry with id: {new_id}')
+        return Response.success({'id': new_id, 'message': 'Entry created successfully'})
+    except SQLAlchemyError as e:
+        logger.error(f'Error creating record: {str(e)}')
+        return Response.error(f'Database error: {str(e)}')
+
+@with_session
+def update(session, table: str, params: dict, data: dict):
+    logger.info(f'Attempting to update entry in table: {table}')
     
-    def add_interest(self, interest: str, keywords: List[str]):
-        """Add a new interest category with keywords"""
-        logger.info(f'Adding interest: {interest} with keywords: {keywords}')
-        with Session(self.engine) as session:
-            interest_obj = session.query(Interest).filter_by(name=interest).first()
-            if not interest_obj:
-                interest_obj = Interest(name=interest, keywords=','.join(keywords))
-                session.add(interest_obj)
-                session.commit()
-                logger.success(f'Added interest: {interest} with keywords: {keywords}')
-                return Response.success(f'Added interest: {interest} with keywords: {keywords}')
-            else:
-                logger.error(f'Interest: {interest} already exists')
-                return Response.error(f'Interest: {interest} already exists')
+    try:
+        tbl = Table(table, metadata, autoload_with=engine)
+        query = session.query(tbl)
+
+        for key, value in params.items():
+            if hasattr(tbl.c, key):
+                query = query.filter(getattr(tbl.c, key) == value)
+
+        item = query.first()
+
+        if not item:
+            return Response.error(f"{table.capitalize()} with given parameters not found")
+
+        query.update(data)
+        session.flush()
+
+        updated_item = query.first()
+        logger.success(f"Successfully updated {table} with new data {updated_item._asdict()}")
+        return Response.success(f"Successfully updated {table} with new data {updated_item._asdict()}")
+    except SQLAlchemyError as e:
+        logger.error(f"Error updating {table}: {str(e)}")
+        raise
+
+@with_session
+def read(session, table: str, params: dict = None):
+    logger.info(f'Attempting to read entry from table: {table}')
     
-    def remove_interest(self, interest: str):
-        """Remove an interest category"""
-        logger.info(f'Removing interest: {interest}')
-        with Session(self.engine) as session:
-            try:
-                interest_obj = session.query(Interest).filter_by(name=interest).first()
-                if interest_obj:
-                    session.delete(interest_obj)
-                    session.commit()
-                    logger.success(f'Removed interest: {interest}')
-                    return Response.success(f'Removed interest: {interest}')
-                else:
-                    logger.error(f'Interest: {interest} does not exist')
-                    return Response.error(f'Interest: {interest} does not exist')
-            except Exception as e:
-                logger.error(f'Error removing interest: {interest}: {e}')
-                return Response.error(f'Error removing interest: {interest}: {e}')
+    try:
+        tbl = Table(table, metadata, autoload_with=engine)
+        query = session.query(tbl)
+
+        if params:
+            for key, value in params.items():
+                if hasattr(tbl.c, key):
+                    query = query.filter(getattr(tbl.c, key) == value)
             
-    def get_interests(self) -> List[dict]:
-        """Get all stored interests"""
-        logger.info('Getting interests')
-        with Session(self.engine) as session:
-            try:
-                interests = session.query(Interest).all()
-                logger.success('Successfully retrieved interests')
-                return [{'name': i.name, 'keywords': i.keywords.split(',')} for i in interests]
-            except Exception as e:
-                logger.error(f'Error getting interests: {e}')
-                return Response.error(f'Error getting interests: {e}')
+        results = query.all()
+
+        serialized_results = [row._asdict() for row in results]
+        
+        logger.success(f'Successfully read {len(serialized_results)} entries from table: {table}')
+        return Response.success(serialized_results)
+    except SQLAlchemyError as e:
+        logger.error(f'Error reading from database: {str(e)}')
+        raise
+
+@with_session
+def delete(session, table: str, params: dict):
+    logger.info(f'Attempting to delete entry from table: {table}')
+    
+    try:
+        tbl = Table(table, metadata, autoload_with=engine)
+        query = session.query(tbl)
+
+        for key, value in params.items():
+            if hasattr(tbl.c, key):
+                query = query.filter(getattr(tbl.c, key) == value)
+
+        item = query.first()
+        if not item:
+            return Response.error(f"{table.capitalize()} with given parameters not found")
+
+        delete_stmt = tbl.delete().where(tbl.c.id == item.id)
+        session.execute(delete_stmt)
+        session.flush()
+
+        logger.success(f"Successfully deleted {table} with id: {item.id}")
+        return Response.success(f"{table.capitalize()} deleted successfully")
+    except SQLAlchemyError as e:
+        logger.error(f"Error deleting {table}: {str(e)}")
+        raise

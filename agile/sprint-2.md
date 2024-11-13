@@ -1,16 +1,13 @@
 # Sprint 2
 
 ## Chosen backlog
-- Some backlog item
-- Some other backlog item
-- Yet another backlog item
-
-## User stories
-- Do something
-- Do something else
-- Do something more
+- Backlog item 4
+- Backlog item 5
+- Backlog item 6
 
 ## Tasks
-- [x] Task 1
-- [ ] Task 2
-- [ ] Task 3
+| Task | Status |
+|------|--------|
+| Task 1 | Done |
+| Task 2 | Pending |
+| Task 3 | Pending |

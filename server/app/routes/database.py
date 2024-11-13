@@ -1,18 +1,16 @@
-from flask import Blueprint
-from app.modules.database import Database
+from flask import Blueprint, request
+from app.modules.database import read
+import json
 
 bp = Blueprint('database', __name__)
 
-database = Database()
-
-@bp.route("/interests", methods=['GET'])
-def get_interests_route():
-    return database.get_interests()
-
-@bp.route("/add", methods=['POST'])
-def add_interest_route():
-    return database.add_interest()
-
-@bp.route("/remove", methods=['POST'])
-def remove_interest_route():
-    return database.remove_interest()
+@bp.route('/read', methods=['POST'])
+def read_route():
+    payload = request.get_json(force=True)
+    if isinstance(payload, str):
+        try:
+            payload = json.loads(payload)
+        except json.JSONDecodeError:
+            return {"error": "Invalid JSON string"}, 400
+    response = read(table=payload['table'], params=payload['params'])
+    return response

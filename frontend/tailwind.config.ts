@@ -31,7 +31,7 @@ module.exports = {
           DEFAULT: "hsl(var(--subtitle))",
         },
         primary: {
-          DEFAULT: '#FA3232',
+          DEFAULT: '#22C55E',
         },
         secondary: {
           DEFAULT: '#0EA5E9',

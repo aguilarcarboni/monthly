@@ -3,15 +3,28 @@ import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { containerVariants } from '@/lib/anims'
 import { accessAPI } from '@/utils/api'
+import { useToast } from '@/hooks/use-toast'
 
 const Home = () => {
 
   const [data, setData] = useState<any>(null);
 
+  const {toast} = useToast()
+
   useEffect(() => {
     async function fetchData() {
-      const response = await accessAPI('/database/interests', 'GET')
-      setData(response);
+      const response = await accessAPI('/database/read', 'POST', {
+        table: 'interests',
+        params: {}
+      })
+      if (response['status'] !== 'success') {
+        toast({
+          title: 'Error',
+          description: response['message'],
+        })
+        throw new Error(response['message'])
+      }
+      setData(response['content']);
     }
     fetchData();
   }, []);
@@ -29,7 +42,12 @@ const Home = () => {
         animate="visible"
       >
         <div className='flex flex-col w-full h-full gap-y-10'>
-          <h1 className='text-xl'>{data.map((interest: any) => interest.name).join(', ')}</h1>
+          {data.map((interest: any) => (
+            <div key={interest.id}>
+              <h1>{interest.name}</h1>
+              <p>{interest.keywords}</p>
+            </div>
+          ))}
         </div>
       </motion.div>
     </AnimatePresence>
