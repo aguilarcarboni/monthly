@@ -13,10 +13,12 @@ const Home = () => {
 
   useEffect(() => {
     async function fetchData() {
+      
       const response = await accessAPI('/database/read', 'POST', {
         table: 'interests',
         params: {}
       })
+      
       if (response['status'] !== 'success') {
         toast({
           title: 'Error',
@@ -25,6 +27,7 @@ const Home = () => {
         throw new Error(response['message'])
       }
       setData(response['content']);
+
     }
     fetchData();
   }, []);
