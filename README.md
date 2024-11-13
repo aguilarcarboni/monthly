@@ -16,7 +16,6 @@ npm -v
 
 [Install Node](https://nodejs.org/en/download/package-manager)
 
-
 Install yarn
 ```bash
 npm install --global yarn
@@ -40,9 +39,6 @@ yarn dev
 ```
 
 
-### Results 
-
-### Contact
-
+### Results
 
 ### created by [@aguilarcarboni](https://github.com/aguilarcarboni), [@JenVicen](https://github.com/JenVicente) and [@Dampmar](https://github.com/Dampmar)
