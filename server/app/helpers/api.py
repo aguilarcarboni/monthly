@@ -1,7 +1,7 @@
 import requests
 import os
 
-url = f"0.0.0.0:{os.getenv('LF_API_PORT')}"
+url = f"http://127.0.0.1:8000"
 
 def access_api(endpoint, method='GET', data=None):
     response = requests.request(method, url + endpoint, json=data)
