@@ -2,38 +2,24 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { containerVariants } from '@/lib/anims'
-import { accessAPI } from '@/utils/api'
-import { useToast } from '@/hooks/use-toast'
+import { BillController } from '../../../controllers/BillController'
+import { Button } from '@/components/ui/button'
+import { Bill } from '@/types/Bill'
 
 const Home = () => {
 
-  const [data, setData] = useState<any>(null);
+  async function handleCreateBill() {
 
-  const {toast} = useToast()
-
-  useEffect(() => {
-    async function fetchData() {
-      
-      const response = await accessAPI('/database/read', 'POST', {
-        table: 'interests',
-        params: {}
-      })
-      
-      if (response['status'] !== 'success') {
-        toast({
-          title: 'Error',
-          description: response['message'],
-        })
-        throw new Error(response['message'])
-      }
-      setData(response['content']);
-
+    const bill: Bill = {
+      id: '1',
+      name: 'Test Bill',
+      amount: 100,
+      dueDate: new Date().toISOString()
     }
-    fetchData();
-  }, []);
 
-  if (!data) {
-    return <div>Loading...</div>;
+    const response = await BillController.createBill(bill);
+    console.log(response)
+
   }
 
   return (
@@ -45,12 +31,7 @@ const Home = () => {
         animate="visible"
       >
         <div className='flex flex-col w-full h-full gap-y-10'>
-          {data.map((interest: any) => (
-            <div key={interest.id}>
-              <h1>{interest.name}</h1>
-              <p>{interest.keywords}</p>
-            </div>
-          ))}
+          <Button onClick={handleCreateBill}>Create Bill</Button>
         </div>
       </motion.div>
     </AnimatePresence>

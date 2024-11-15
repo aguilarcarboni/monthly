@@ -1,14 +1,11 @@
+import { Bill } from "@/types/Bill";
 import { accessAPI } from "@/utils/api";
 
 export class BillController {
 
-    static async createBill(bill: any & { id: number }) {
-
-        bill = {
-            'id': 1
-        }
+    static async createBill(bill: Bill) {
         
-        const response = await accessAPI('/bill_service/createBill', 'POST', bill);
+        const response = await accessAPI('/bill_service/create', 'POST', {'bill': bill});
         if (response['status'] !== 'success') {
             throw new Error('Failed to create bill');
         }

@@ -1,6 +1,4 @@
-import { Map } from "../lib/types"
-
-export async function accessAPI(url: string, type: string, params?: Map, binary?: boolean) {
+export async function accessAPI(url: string, type: string, params?: any, binary?: boolean) {
 
     async function fetchData() {
         const options: RequestInit = {

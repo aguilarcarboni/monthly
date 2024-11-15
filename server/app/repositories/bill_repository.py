@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, Table, MetaData
+from sqlalchemy import create_engine, Column, Integer, String, Table, MetaData, Date
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
@@ -16,7 +16,8 @@ class Bill(Base):
     __tablename__ = 'bills'
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True)
-    keywords = Column(String)
+    amount = Column(Integer)
+    dueDate = Column(String)
 
 logger.announcement('Initializing Database Service', 'info')
 

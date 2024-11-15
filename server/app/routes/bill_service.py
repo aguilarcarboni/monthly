@@ -1,6 +1,7 @@
 from flask import Blueprint, request
 from app.modules.bill_service import BillService
 from app.helpers.response import Response
+from app.helpers.logger import logger
 
 bp = Blueprint('bill_service', __name__)
 BillService = BillService()
