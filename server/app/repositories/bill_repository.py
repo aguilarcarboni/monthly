@@ -2,24 +2,25 @@ from sqlalchemy import create_engine, Column, Integer, String, Table, MetaData
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
+import os
+
 from app.helpers.logger import logger
 from app.helpers.response import Response
-import os
+
 from functools import wraps
 
 Base = declarative_base()
 
-class Interest(Base):
-    """Interest class"""
-    __tablename__ = 'interests'
-    
+class Bills(Base):
+    """Bills table"""
+    __tablename__ = 'bills'
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True)
     keywords = Column(String)
 
 logger.announcement('Initializing Database Service', 'info')
 
-db_path = os.path.join(os.path.dirname(__file__), '..', 'db', 'news.db')
+db_path = os.path.join(os.path.dirname(__file__), '..', 'db', 'bill_repository.db')
 db_url = f'sqlite:///{db_path}'
 
 engine = create_engine(db_url)
@@ -46,11 +47,11 @@ def with_session(func):
     return wrapper
 
 @with_session
-def create(session, table: str, data: dict):
-    logger.info(f'Attempting to create new entry in table: {table}')
+def create(session, data: dict):
+    logger.info(f'Attempting to create new entry in table: bills')
 
     try:
-        tbl = Table(table, metadata, autoload_with=engine)
+        tbl = Table('bills', metadata, autoload_with=engine)
         new_record = tbl.insert().values(**data)
         result = session.execute(new_record)
         session.flush()
@@ -61,6 +62,7 @@ def create(session, table: str, data: dict):
         logger.error(f'Error creating record: {str(e)}')
         return Response.error(f'Database error: {str(e)}')
 
+# table: 'bills', {id: 1, name: 'Bill 1}, {name: 'Bill 2'}
 @with_session
 def update(session, table: str, params: dict, data: dict):
     logger.info(f'Attempting to update entry in table: {table}')

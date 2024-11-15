@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import BillForm from './BillForm';
-import { BillService } from '../services/BillService';
 import { Bill } from '@/types/Bill';
+import { accessAPI } from '@/utils/api';
 
 const BillView = () => {
     const [bills, setBills] = useState<Bill[]>([]);
 
     useEffect(() => {
         const fetchBills = async () => {
-            const fetchedBills = await BillService.getBills();
+            //const fetchedBills = await BillService.getBills();
+            const fetchedBills = await accessAPI('/bill_service', 'GET', {});
             setBills(fetchedBills);
         };
         fetchBills();

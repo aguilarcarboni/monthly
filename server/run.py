@@ -17,8 +17,8 @@ def create_app():
     cors = CORS(app, resources={r"/*": {"origins": "*"}})
     app.config['CORS_HEADERS'] = 'Content-Type'
 
-    from app.routes import database
-    app.register_blueprint(database.bp, url_prefix='/database')
+    from app.routes import bill_service
+    app.register_blueprint(bill_service.bp, url_prefix='/bill_service')
 
     @app.route('/', methods=['GET'])
     def index():
