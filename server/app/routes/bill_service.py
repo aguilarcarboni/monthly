@@ -25,3 +25,8 @@ def update_bill_route():
 def delete_bill_route():
     response = BillService.deleteBill()
     return response
+
+@bp.route('/findAll', methods=['GET'])
+def find_all_route():
+    response = BillService.findAll()
+    return response

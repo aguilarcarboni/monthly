@@ -12,4 +12,9 @@ export class BillController {
         return response;
     }
 
+    static async findAll() {
+        const response = await accessAPI('/bill_service/findAll', 'GET');
+        return response;
+    }
+
 }

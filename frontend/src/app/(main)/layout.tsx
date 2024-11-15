@@ -9,7 +9,7 @@ export default function Layout({
 }) {
   
   return (
-    <div className='h-full w-full flex flex-col gap-y-24'>
+    <div className='h-full w-full flex flex-col p-5 gap-y-24'>
       <Header />
       <div className='h-full w-full'>
         {children}

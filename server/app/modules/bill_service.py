@@ -12,6 +12,8 @@ class BillService:
     def __init__(self):
         pass
 
+    # TODO Get next ID?
+
     def create(self, bill: Bill):
         response = create(data=bill)
         return Response.success(response)
@@ -27,3 +29,6 @@ class BillService:
 
     def processBillPayment(self, billID: str):
         return Response.success('Bill payment processed successfully')
+    
+    def findAll(self):
+        return Response.success(read())
