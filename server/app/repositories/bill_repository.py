@@ -11,8 +11,8 @@ from functools import wraps
 
 Base = declarative_base()
 
-class Bills(Base):
-    """Bills table"""
+class Bill(Base):
+    """Bill table"""
     __tablename__ = 'bills'
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True)
@@ -62,13 +62,12 @@ def create(session, data: dict):
         logger.error(f'Error creating record: {str(e)}')
         return Response.error(f'Database error: {str(e)}')
 
-# table: 'bills', {id: 1, name: 'Bill 1}, {name: 'Bill 2'}
 @with_session
-def update(session, table: str, params: dict, data: dict):
-    logger.info(f'Attempting to update entry in table: {table}')
+def update(session, params: dict, data: dict):
+    logger.info(f'Attempting to update entry in table: bills')
     
     try:
-        tbl = Table(table, metadata, autoload_with=engine)
+        tbl = Table('bills', metadata, autoload_with=engine)
         query = session.query(tbl)
 
         for key, value in params.items():
@@ -78,16 +77,16 @@ def update(session, table: str, params: dict, data: dict):
         item = query.first()
 
         if not item:
-            return Response.error(f"{table.capitalize()} with given parameters not found")
+            return Response.error(f"Bills with given parameters not found")
 
         query.update(data)
         session.flush()
 
         updated_item = query.first()
-        logger.success(f"Successfully updated {table} with new data {updated_item._asdict()}")
-        return Response.success(f"Successfully updated {table} with new data {updated_item._asdict()}")
+        logger.success(f"Successfully updated Bills with new data {updated_item._asdict()}")
+        return Response.success(f"Successfully updated Bills with new data {updated_item._asdict()}")
     except SQLAlchemyError as e:
-        logger.error(f"Error updating {table}: {str(e)}")
+        logger.error(f"Error updating Bills: {str(e)}")
         raise
 
 @with_session
