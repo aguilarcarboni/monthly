@@ -5,7 +5,9 @@ export class BillController {
 
     // Create a new bill
     static async createBill(bill: Bill) {
+        console.log("Creating bill:", bill);
         const response = await accessAPI('/bill_service/create', 'POST', {'bill': bill});
+        console.log("Response from server:", response);
         if (response['status'] !== 'success') {
             throw new Error('Failed to create bill');
         }

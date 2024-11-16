@@ -31,6 +31,10 @@ metadata = MetaData()
 metadata.reflect(bind=engine)
 logger.announcement('Database Service initialized', 'success')
 
+# Verificar si el archivo es escribible
+if not os.access(db_path, os.W_OK):
+    print(f"El archivo {db_path} no es escribible. Verifica los permisos.")
+
 def with_session(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
