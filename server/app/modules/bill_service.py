@@ -1,5 +1,3 @@
-# Dependencies with bill repository
-
 from app.helpers.logger import logger
 from app.repositories.bill_repository import create, update, read, delete
 from app.helpers.response import Response
@@ -12,23 +10,32 @@ class BillService:
     def __init__(self):
         pass
 
-    # TODO Get next ID?
-
+    # Create a new bill
     def create(self, bill: Bill):
         response = create(data=bill)
         return Response.success(response)
 
-    def update(self, bill: Bill):
-        return Response.success('Bill updated successfully')
+    # Update an existing bill
+    def updateBill(self, billID: str, updatedBill: Bill):
+        # Assumed that 'update' expects a dictionary of fields
+        response = update(params={"id": billID}, data=updatedBill.__dict__)
+        return response
 
-    def delete(self, billID: str):
-        return Response.success('Bill deleted successfully')
+    # Delete a bill by ID
+    def deleteBill(self, billID: str):
+        response = delete(params={"id": billID})
+        return response
 
+    # Schedule a bill reminder (set priority)
     def scheduleBillReminder(self, billID: str, highPriority: bool):
-        return Response.success('Bill reminder scheduled successfully') 
+        # Placeholder for actual scheduling logic
+        return Response.success('Bill reminder scheduled successfully')
 
+    # Process a bill payment
     def processBillPayment(self, billID: str):
+        # Placeholder for actual payment processing logic
         return Response.success('Bill payment processed successfully')
-    
+
+    # Retrieve all bills
     def findAll(self):
         return Response.success(read())
