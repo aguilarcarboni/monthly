@@ -14,12 +14,12 @@
 
 | Task                                         | Status   |
 |----------------------------------------------|----------|
-| Create the Bill Management Screen interface  | Pending  |
-| Implement fields: bill name, amount, due date, and type | Pending  |
-| Integrate the BillController with the interface | Pending  |
-| Implement the ReminderService functionality  | Pending  |
-| Set up notifications for upcoming due dates  | Pending  |
-| Develop the NotificationService              | Pending  |
+| Create the Bill Management Screen interface  | Done  |
+| Implement fields: bill name, amount, due date, and type | Done  |
+| Integrate the BillController with the interface | Done  |
+| Implement the ReminderService functionality  | Done  |
+| Set up notifications for upcoming due dates  | Done  |
+| Develop the NotificationService              | Done  |
 | Prototype encryption for sensitive data      | Pending  |
 | Implement basic user validation using the User class | Pending  |
 | Set up basic access control for users        | Pending  |
