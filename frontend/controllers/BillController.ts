@@ -35,12 +35,6 @@ export class BillController {
         return response;
     }
 
-    // Get all bills
-    static async getBills() {
-        const response = await accessAPI('/bill_service/findAll', 'GET');
-        return response;
-    }
-
     // Schedule a bill reminder
     static async scheduleBillReminder(billID: string, highPriority: boolean) {
         const response = await accessAPI('/bill_service/scheduleBillReminder', 'POST', {

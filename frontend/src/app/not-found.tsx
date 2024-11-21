@@ -44,12 +44,6 @@ const NotFoundPage = () => {
             Go Home
           </Link>
         </Button>
-        <Button asChild variant="outline">
-          <Link href="javascript:history.back()">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Go Back
-          </Link>
-        </Button>
       </motion.div>
     </div>
   );

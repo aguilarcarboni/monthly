@@ -38,4 +38,5 @@ class BillService:
 
     # Retrieve all bills
     def findAll(self):
-        return Response.success(read())
+        response = read()['content']
+        return Response.success(response)

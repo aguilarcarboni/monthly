@@ -7,41 +7,34 @@ import { cn } from "@/lib/utils"
 
 import {
     NavigationMenu,
-    NavigationMenuContent,
     NavigationMenuItem,
     NavigationMenuLink,
     NavigationMenuList,
-    NavigationMenuTrigger,
     navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
-
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-  } from "@/components/ui/popover"
-import useWindowDimensions from '@/hooks/useWindowDimensions'
 import { Button } from '../ui/button'
-import { useTheme } from 'next-themes'
-import { MoonIcon, SunIcon } from 'lucide-react'
 
 const Navbar = () => {
 
-    const { theme, setTheme } = useTheme()
-
-    const { width, height } = useWindowDimensions();
-
     const locations = [
         {
-          name:'About us',
-          url: '/about-us'
+            name: 'Home',
+            url: '/'
+        },
+        {
+            name: 'Getting started',
+            url: '/onboarding'
+        },
+        {
+            name: 'Bills',
+            url: '/bills'
         },
         {
             name: 'Contact',
             url: '/contact'
         },
-      ]
-      
+    ]
+
   return (
     <NavigationMenu>
         <NavigationMenuList>
@@ -55,16 +48,6 @@ const Navbar = () => {
                     </Link>
                 </NavigationMenuItem>
             ))}
-
-            <NavigationMenuItem>
-                <div className='h-full w-full flex flex-col justify-center items-center gap-y-5'>
-                    <div className='flex gap-x-5'>
-                        <Button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
-                            {theme === 'dark' ? <MoonIcon/> : <SunIcon/>}
-                        </Button>
-                    </div>
-                </div>
-            </NavigationMenuItem>
 
         </NavigationMenuList>
     </NavigationMenu>

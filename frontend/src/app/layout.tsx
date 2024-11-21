@@ -6,9 +6,10 @@ import { ThemeProvider } from '@/utils/ThemeProvider'
 import { cn } from '@/lib/utils'
 import { Toaster } from '@/components/ui/toaster'
 import { Analytics } from "@vercel/analytics/react"
+import Header from '@/components/main/Header'
 
 export const metadata: Metadata = {
-  title: 'Software Engineering Project',
+  title: 'Bill Tracker',
 };
 
 export default function RootLayout({
@@ -24,7 +25,8 @@ export default function RootLayout({
             defaultTheme="light"
             disableTransitionOnChange
           >
-          <div className='h-full w-full p-5'>
+          <div className='h-full w-full p-5 gap-10 flex flex-col'>
+            <Header/>
             {children}
             <Toaster/>
             <SpeedInsights />
