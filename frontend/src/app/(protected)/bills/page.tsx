@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { containerVariants } from '@/lib/anims'
-import { BillController } from '../../../controllers/BillController'
+import { BillController } from '../../../../controllers/BillController'
 import { Bill } from '@/types/Bill'
 import { ColumnDefinition, DataTable } from '@/components/misc/DataTable'
 import { toast } from '@/hooks/use-toast'

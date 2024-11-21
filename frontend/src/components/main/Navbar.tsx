@@ -13,6 +13,7 @@ import {
     navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import { Button } from '../ui/button'
+import Account from '../misc/Account'
 
 const Navbar = () => {
 
@@ -48,6 +49,7 @@ const Navbar = () => {
                     </Link>
                 </NavigationMenuItem>
             ))}
+            <Account/>
 
         </NavigationMenuList>
     </NavigationMenu>

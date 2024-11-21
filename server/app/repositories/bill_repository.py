@@ -9,6 +9,8 @@ from app.helpers.response import Response
 
 from functools import wraps
 
+# TODO: Add encryption to the database
+
 Base = declarative_base()
 
 class Bill(Base):

@@ -26,7 +26,6 @@ export default function RootLayout({
             disableTransitionOnChange
           >
           <div className='h-full w-full p-5 gap-10 flex flex-col'>
-            <Header/>
             {children}
             <Toaster/>
             <SpeedInsights />
