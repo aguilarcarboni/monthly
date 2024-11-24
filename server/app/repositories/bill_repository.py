@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, Table, MetaData, Date
+from sqlalchemy import create_engine, Column, Integer, String, Table, MetaData, Date, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
@@ -20,6 +20,10 @@ class Bill(Base):
     name = Column(String, unique=True)
     amount = Column(Integer)
     dueDate = Column(String)
+    paid = Column(Boolean, default=False)
+    category = Column(String)
+    renewal = Column(String)
+    status = Column(String, default='Pending')
 
 logger.announcement('Initializing Database Service', 'info')
 
@@ -33,9 +37,6 @@ metadata = MetaData()
 metadata.reflect(bind=engine)
 logger.announcement('Database Service initialized', 'success')
 
-# Verificar si el archivo es escribible
-if not os.access(db_path, os.W_OK):
-    print(f"El archivo {db_path} no es escribible. Verifica los permisos.")
 
 def with_session(func):
     @wraps(func)
