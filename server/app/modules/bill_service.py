@@ -16,10 +16,9 @@ class BillService:
         return Response.success(response)
 
     # Update an existing bill
-    def updateBill(self, billID: str, updatedBill: Bill):
-        # Assumed that 'update' expects a dictionary of fields
-        response = update(params={"id": billID}, data=updatedBill.__dict__)
-        return response
+    def updateBill(self, billID: str, updatedBill: dict):
+        response = update(params={"id": billID}, data=updatedBill)
+        return Response.success(response)
 
     # Delete a bill by ID
     def deleteBill(self, billID: str):

@@ -64,7 +64,7 @@ const CreateBill = ({ setBills, setCreatingBill }: Props) => {
             paid: false,
             category: category,
             renewal: renewal,
-            status: 'Pending'
+            status: 'pending'
         }
     
         try {

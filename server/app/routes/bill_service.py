@@ -17,17 +17,17 @@ def create_bill_route():
     except Exception as e:
         return Response.error(e)
 
-# Route to update a bill
-@bp.route('/updateBill', methods=['POST'])
+@bp.route('/updateBill', methods=['PUT'])
 def update_bill_route():
     payload = request.get_json()
     billID = payload['billID']
-    updatedBill = payload['updatedBill']
+    updatedBill = payload['updatedBill']  # Extract the updated bill data from the request
     try:
         response = BillService.updateBill(billID, updatedBill)
         return response
     except Exception as e:
-        return Response.error(e)
+        error_message = str(e)  # Convertir el error a cadena
+        return Response.error(error_message)
 
 # Route to delete a bill
 @bp.route('/deleteBill', methods=['POST'])

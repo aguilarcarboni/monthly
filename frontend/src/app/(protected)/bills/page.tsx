@@ -7,19 +7,20 @@ import { Bill } from '@/types/Bill'
 import { ColumnDefinition, DataTable } from '@/components/misc/DataTable'
 import { toast } from '@/hooks/use-toast'
 import CreateBill from '@/components/bills/CreateBill'
+import PayBill from '@/components/bills/PayBill'
 
 const Home = () => {
-
   const [bills, setBills] = useState<Bill[] | null>(null);
   const [creatingBill, setCreatingBill] = useState(false);
   const [selection, setSelection] = useState<Bill | null>(null);
+  const [isPayBillOpen, setIsPayBillOpen] = useState(false);
 
   // Determine the status of a bill
   const updateStatus = (bill: Bill): string => {
     const today = new Date();
     const dueDate = new Date(bill.dueDate);
     if (bill.paid) {
-      return "payed";
+      return "paid";
     } else if (dueDate < today) {
       return "overdue";
     } else {
@@ -54,10 +55,10 @@ const Home = () => {
       cell: (cell) => {
         const status = cell.getValue(); // Automatically infers the type
         let statusStyle = "";
-        if (status === "payed") statusStyle = "bg-green-100 text-green-700";
+        if (status === "paid") statusStyle = "bg-green-100 text-green-700";
         else if (status === "pending") statusStyle = "bg-yellow-100 text-yellow-700";
         else if (status === "overdue") statusStyle = "bg-red-100 text-red-700";
-  
+
         return (
           <span className={`px-2 py-1 rounded-full text-sm font-bold ${statusStyle}`}>
             {String(status).toUpperCase()}
@@ -65,7 +66,7 @@ const Home = () => {
         );
       },
     }
-  ];  
+  ];
 
   // Fetch all bills and update their statuses
   useEffect(() => {
@@ -111,20 +112,8 @@ const Home = () => {
 
   async function handlePayment(bill: Bill | null) {
     if (!bill) return;
-
-    try {
-      const response = await BillController.initiatePayment(bill.id);
-      if (response['status'] === 'success') {
-        toast({ title: "Success", description: "Payment processed successfully." });
-        // Optionally refresh the bills after payment
-        setBills(await BillController.findAll());
-      } else {
-        throw new Error(response['message']);
-      }
-    } catch (error) {
-      const errorMessage = (error as Error).message;
-      toast({ title: "Error", description: errorMessage });
-    }
+    setSelection(bill);
+    setIsPayBillOpen(true); // Open the PayBill modal
   }
 
   const rowActions = [
@@ -140,7 +129,7 @@ const Home = () => {
       label: 'Pay',
       onClick: () => handlePayment(selection)
     }
-  ]
+  ];
 
   return (
     <AnimatePresence mode="popLayout">
@@ -154,10 +143,15 @@ const Home = () => {
           <h1 className='text-5xl font-semibold'>Bill Manager</h1>
           <CreateBill setBills={setBills} setCreatingBill={setCreatingBill} />
         </div>
-        <DataTable data={bills} columns={columns} enableSelection setSelection={setSelection} enablePagination enableRowActions rowActions={rowActions}/>
+        <DataTable data={bills} columns={columns} enableSelection setSelection={setSelection} enablePagination enableRowActions rowActions={rowActions} />
+        
+        {/* PayBill Modal */}
+        {isPayBillOpen && selection && (
+          <PayBill bill={selection} onClose={() => setIsPayBillOpen(false)} />
+        )}
       </motion.div>
     </AnimatePresence>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

@@ -11,6 +11,8 @@ class Response:
 
     @classmethod
     def error(cls, content: Any) -> Dict[str, Union[str, Any]]:
+        if not isinstance(content, str):
+            content = str(content)
         return cls("error", content).to_dict()
 
     def to_dict(self) -> Dict[str, Union[str, Any]]:

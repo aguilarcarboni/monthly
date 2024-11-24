@@ -23,7 +23,7 @@ class Bill(Base):
     paid = Column(Boolean, default=False)
     category = Column(String)
     renewal = Column(String)
-    status = Column(String, default='Pending')
+    status = Column(String, default='pending')
 
 logger.announcement('Initializing Database Service', 'info')
 

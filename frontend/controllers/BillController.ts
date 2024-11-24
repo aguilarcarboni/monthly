@@ -18,7 +18,7 @@ export class BillController {
     static async updateBill(billID: string, updatedBill: Bill) {
         const response = await accessAPI('/bill_service/updateBill', 'POST', {
             'billID': billID,
-            'updatedBill': updatedBill
+            'updatedBill': updatedBill // Send updatedBill as an object
         });
         if (response['status'] !== 'success') {
             throw new Error('Failed to update bill');
