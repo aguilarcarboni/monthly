@@ -17,7 +17,7 @@ def create_bill_route():
     except Exception as e:
         return Response.error(e)
 
-@bp.route('/updateBill', methods=['PUT'])
+@bp.route('/updateBill', methods=['POST'])
 def update_bill_route():
     payload = request.get_json()
     billID = payload['billID']
