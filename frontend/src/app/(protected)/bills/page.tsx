@@ -14,11 +14,20 @@ const Home = () => {
   const [creatingBill, setCreatingBill] = useState(false);
   const [selection, setSelection] = useState<Bill | null>(null);
 
-  const columns:ColumnDefinition<Bill>[] = [
-    {
-      header: 'ID',
-      accessorKey: 'id'
-    },
+  // Determine the status of a bill
+  const updateStatus = (bill: Bill): string => {
+    const today = new Date();
+    const dueDate = new Date(bill.dueDate);
+    if (bill.paid) {
+      return "payed";
+    } else if (dueDate < today) {
+      return "overdue";
+    } else {
+      return "pending";
+    }
+  };
+
+  const columns: ColumnDefinition<Bill>[] = [
     {
       header: 'Name',
       accessorKey: 'name'
@@ -30,39 +39,60 @@ const Home = () => {
     {
       header: 'Due Date',
       accessorKey: 'dueDate'
+    },
+    {
+      header: 'Category',
+      accessorKey: 'category'
+    },
+    {
+      header: 'Renewal',
+      accessorKey: 'renewal'
+    },
+    {
+      header: "Status",
+      accessorKey: "status",
+      cell: (cell) => {
+        const status = cell.getValue(); // Automatically infers the type
+        let statusStyle = "";
+        if (status === "payed") statusStyle = "bg-green-100 text-green-700";
+        else if (status === "pending") statusStyle = "bg-yellow-100 text-yellow-700";
+        else if (status === "overdue") statusStyle = "bg-red-100 text-red-700";
+  
+        return (
+          <span className={`px-2 py-1 rounded-full text-sm font-bold ${statusStyle}`}>
+            {String(status).toUpperCase()}
+          </span>
+        );
+      },
     }
-  ]
+  ];  
 
-  // Fetch all bills on load and on creating bill
+  // Fetch all bills and update their statuses
   useEffect(() => {
-    
     async function fetchBills() {
-
       if (creatingBill) return;
 
       try {
-
         const response = await BillController.findAll();
-        setBills(response['content']);
+        const updatedBills = response["content"].map((bill: Bill) => ({
+          ...bill,
+          status: updateStatus(bill),
+        }));
+
+        setBills(updatedBills);
 
         // Reminder notification for due bills
-        const dueBills = response['content'].filter((bill: Bill) => {
-          const dueDate = new Date(bill.dueDate);
-          const today = new Date();
-          return dueDate <= today;
-        });
-
+        const dueBills = updatedBills.filter((bill: Bill) => bill.status === "overdue");
         if (dueBills.length > 0) {
-          toast({ title: "Reminder", description: `${dueBills.length} bill(s) are due.` });
+          toast({ title: "Reminder", description: `${dueBills.length} bill(s) are overdue.` });
         }
-
       } catch (error) {
-        toast({ title: "Error", description: "Failed to fetch bills." });
+        const errorMessage = (error as Error).message;
+        toast({ title: "Error", description: errorMessage });
       }
     }
 
     fetchBills();
-
   }, [creatingBill]);
 
   if (!bills) {
@@ -79,6 +109,24 @@ const Home = () => {
     if (!bill) return;
   }
 
+  async function handlePayment(bill: Bill | null) {
+    if (!bill) return;
+
+    try {
+      const response = await BillController.initiatePayment(bill.id);
+      if (response['status'] === 'success') {
+        toast({ title: "Success", description: "Payment processed successfully." });
+        // Optionally refresh the bills after payment
+        setBills(await BillController.findAll());
+      } else {
+        throw new Error(response['message']);
+      }
+    } catch (error) {
+      const errorMessage = (error as Error).message;
+      toast({ title: "Error", description: errorMessage });
+    }
+  }
+
   const rowActions = [
     {
       label: 'Delete',
@@ -87,6 +135,10 @@ const Home = () => {
     {
       label: 'Edit',
       onClick: () => handleEditBill(selection)
+    },
+    {
+      label: 'Pay',
+      onClick: () => handlePayment(selection)
     }
   ]
 

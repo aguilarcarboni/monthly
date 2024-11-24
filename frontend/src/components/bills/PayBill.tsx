@@ -13,15 +13,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog"
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from '../ui/dropdown-menu'
-
-const categories = ['Entertainment', 'Membership', 'Studies', 'Work', 'Services'];
-const renewalOptions = ['One Time Payment', 'Weekly', 'Bi Weekly', 'Monthly', 'Every 3 Months', 'Every 6 Months', 'Yearly'];
 
 type Props = {
     setBills: React.Dispatch<React.SetStateAction<Bill[] | null>>;
@@ -29,18 +20,22 @@ type Props = {
 }
 
 const CreateBill = ({ setBills, setCreatingBill }: Props) => {
+
     const { toast } = useToast();
     const [name, setName] = useState<string>('');
     const [amount, setAmount] = useState<number>(100);
     const [dueDate, setDueDate] = useState<string>('');
-    const [category, setCategory] = useState<string>('Select a category');
-    const [renewal, setRenewal] = useState<string>('Select a renewal option');
+    const [category, setCategory] = useState<string>('');
+    const [renewal, setRenewal] = useState<string>('');
+    const [status, setStatus] = useState<string>('Pending');
     const [open, setOpen] = useState(false);
 
     async function handleCreateBill() {
+                
         setCreatingBill(true);
 
         const today = new Date();
+
         const dueDateObj = new Date(dueDate);
         if (dueDateObj <= today) {
           toast({ title: "Error", description: "Due date must be in the future." });
@@ -53,21 +48,24 @@ const CreateBill = ({ setBills, setCreatingBill }: Props) => {
           throw new Error("Failed to get bills.");
         }
 
+        console.log(response['content']);
+
         const bill_ids = response['content'].map((bill: Bill) => bill.id);
-        const max_id = bill_ids.length > 0 ? Math.max(...bill_ids) : 0;
+        const max_id = Math.max(...bill_ids);
     
         const bill: Bill = {
-            id: (max_id + 1).toString(),
-            name: name,
-            amount: amount,
-            dueDate: dueDate,
-            paid: false,
-            category: category,
-            renewal: renewal,
-            status: 'Pending'
+          id: (max_id + 1).toString(),
+          name: name,
+          amount: amount,
+          dueDate: dueDate,
+          paid: false,
+          category: category,
+          renewal: renewal,
+          status: 'Pending'
         }
     
         try {
+
           const response = await BillController.createBill(bill);
           if (response['status'] !== 'success') {
             throw new Error('Failed to create bill');
@@ -79,10 +77,6 @@ const CreateBill = ({ setBills, setCreatingBill }: Props) => {
           setName('');
           setAmount(0);
           setDueDate('');
-          setCategory('Select a category');
-          setRenewal('Select a renewal option');
-          setOpen(false);
-          setOpen(false);
           setOpen(false);
     
         } catch (error: any) {
@@ -125,38 +119,14 @@ const CreateBill = ({ setBills, setCreatingBill }: Props) => {
                     onChange={(e) => setDueDate(e.target.value)}
                     className='input'
                 />
-                    <DropdownMenu>
-                        <DropdownMenuTrigger className='input text-left'>
-                            {category}
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className='text-left'>
-                            {categories.map((cat) => (
-                                <DropdownMenuItem key={cat} onClick={() => setCategory(cat)}>
-                                    {cat}
-                                </DropdownMenuItem>
-                            ))}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger className='input text-left'>
-                            {renewal}
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className='text-left'>
-                            {renewalOptions.map((option) => (
-                                <DropdownMenuItem key={option} onClick={() => setRenewal(option)}>
-                                    {option}
-                                </DropdownMenuItem>
-                            ))}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                    <Button onClick={handleCreateBill} className='flex w-fit gap-2'>
-                        <PlusIcon className='w-4 h-4' />
-                        Add Bill
-                    </Button>
-                </div>
-            </DialogContent>
-        </Dialog>
-    )
+                <Button onClick={handleCreateBill} className='flex w-fit gap-2'>
+                    <PlusIcon className='w-4 h-4' />
+                    Add Bill
+                </Button>
+            </div>
+        </DialogContent>
+    </Dialog>
+  )
 }
 
 export default CreateBill

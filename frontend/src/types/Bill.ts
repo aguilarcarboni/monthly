@@ -3,4 +3,8 @@ export interface Bill {
     name: string;
     amount: number;
     dueDate: string;
+    paid: boolean;
+    category: string;
+    renewal: string;
+    status: string;
 }
