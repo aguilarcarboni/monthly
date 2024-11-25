@@ -12,43 +12,43 @@ import {
     NavigationMenuList,
     navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
-import { Button } from '../ui/button'
 import Account from '../misc/Account'
+import { useSession } from 'next-auth/react'
+import { Button } from '../ui/button'
+import { Moon, Sun } from 'lucide-react'
+import { useTheme } from 'next-themes'
 
 const Navbar = () => {
 
-    const locations = [
-        {
-            name: 'Home',
-            url: '/'
-        },
-        {
-            name: 'Getting started',
-            url: '/onboarding'
-        },
-        {
-            name: 'Bills',
-            url: '/bills'
-        },
-        {
-            name: 'Contact',
-            url: '/contact'
-        },
-    ]
+    const {data: session} = useSession()
+    const {theme, setTheme} = useTheme()
 
   return (
     <NavigationMenu>
         <NavigationMenuList>
+            
+            <Button variant='ghost' onClick={() => {
+                setTheme(theme === 'light' ? 'dark' : 'light')
+            }} className='flex items-center gap-2 hover:bg-transparent hover:text-primary'>
+               {theme === 'light' ? <Moon/> : <Sun/>}
+            </Button>
 
-            {locations.map((location) => (
-                <NavigationMenuItem key={location.name}>
-                    <Link href={location.url} legacyBehavior passHref>
+            <NavigationMenuItem key='home'>
+                <Link href='/' legacyBehavior passHref>
                     <NavigationMenuLink className={cn(navigationMenuTriggerStyle())}>
-                        {location.name}
+                       Home
                     </NavigationMenuLink>
-                    </Link>
-                </NavigationMenuItem>
-            ))}
+                </Link>
+            </NavigationMenuItem>
+
+            <NavigationMenuItem key='bills'>
+                <Link href={!session || !session.user ? '/onboarding' : '/bills'} legacyBehavior passHref>
+                    <NavigationMenuLink className={cn(navigationMenuTriggerStyle())}>
+                        {!session || !session.user ? 'Onboarding' : 'My Bills'}
+                    </NavigationMenuLink>
+                </Link>
+            </NavigationMenuItem>
+
             <Account/>
 
         </NavigationMenuList>

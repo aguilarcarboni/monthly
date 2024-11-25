@@ -11,7 +11,10 @@ import PayBill from '@/components/bills/PayBill'
 
 const Home = () => {
   const [bills, setBills] = useState<Bill[] | null>(null);
+
   const [creatingBill, setCreatingBill] = useState(false);
+  const [deletingBill, setDeletingBill] = useState(false);
+
   const [selection, setSelection] = useState<Bill | null>(null);
   const [isPayBillOpen, setIsPayBillOpen] = useState(false);
 
@@ -71,7 +74,7 @@ const Home = () => {
   // Fetch all bills and update their statuses
   useEffect(() => {
     async function fetchBills() {
-      if (creatingBill) return;
+      if (creatingBill || deletingBill || isPayBillOpen) return;
 
       try {
         const response = await BillController.findAll();
@@ -94,16 +97,20 @@ const Home = () => {
     }
 
     fetchBills();
-  }, [creatingBill]);
-
-  if (!bills) {
-    return <h1 className='text-2xl font-bold'>Loading bills...</h1>
-  }
-
-  const upcomingPayments = bills.filter(bill => new Date(bill.dueDate) > new Date());
+  }, [creatingBill, deletingBill, isPayBillOpen]);
 
   async function handleDeleteBill(bill: Bill | null) {
+    console.log(bill);
     if (!bill) return;
+
+    try {
+      setDeletingBill(true);
+      await BillController.deleteBill(bill.id);
+      setDeletingBill(false);
+    } catch (error) {
+      const errorMessage = (error as Error).message;
+      toast({ title: "Error", description: errorMessage });
+    }
   }
 
   async function handleEditBill(bill: Bill | null) {
@@ -119,17 +126,17 @@ const Home = () => {
   const rowActions = [
     {
       label: 'Delete',
-      onClick: () => handleDeleteBill(selection)
-    },
-    {
-      label: 'Edit',
-      onClick: () => handleEditBill(selection)
+      onClick: (row: any) => handleDeleteBill(row)
     },
     {
       label: 'Pay',
-      onClick: () => handlePayment(selection)
+      onClick: (row: any) => handlePayment(row)
     }
   ];
+
+  if (!bills) {
+    return <h1 className='text-2xl font-bold'>Loading bills...</h1>
+  }
 
   return (
     <AnimatePresence mode="popLayout">
@@ -143,12 +150,18 @@ const Home = () => {
           <h1 className='text-5xl font-semibold'>Bill Manager</h1>
           <CreateBill setBills={setBills} setCreatingBill={setCreatingBill} />
         </div>
-        <DataTable data={bills} columns={columns} enableSelection setSelection={setSelection} enablePagination enableRowActions rowActions={rowActions} />
+
+        <DataTable
+          data={bills} 
+          columns={columns}
+          enablePagination enableRowActions rowActions={rowActions} 
+        />
         
         {/* PayBill Modal */}
-        {isPayBillOpen && selection && (
+        {isPayBillOpen && (
           <PayBill bill={selection} onClose={() => setIsPayBillOpen(false)} />
         )}
+
       </motion.div>
     </AnimatePresence>
   );

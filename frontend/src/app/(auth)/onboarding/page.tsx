@@ -78,7 +78,7 @@ const Onboarding = () => {
 
     if (step === 2) {
         return (
-            <div className="flex flex-col items-center p-8 max-w-4xl mx-auto">
+            <div className="flex flex-col items-center gap-5 max-w-4xl mx-auto">
 
                 <div className='flex flex-col items-center'>
                     <h1 className='text-5xl md:text-7xl font-bold mb-8'>Welcome to Monthly!</h1>
@@ -86,7 +86,7 @@ const Onboarding = () => {
                     <div className='text-sm bg-error/20 p-4 rounded-md'>Warning: This app tracks your bills and expenses, so please use safe credentials.</div>
                 </div>
 
-                <div className='flex flex-col items-center gap-20'>
+                <div className='flex flex-col items-center gap-5'>
 
                     <div className='flex flex-col items-center gap-4'>
                         <h2 className="text-sm text-subtitle">First off, lets get your name.</h2>
@@ -104,7 +104,7 @@ const Onboarding = () => {
                     </div>
 
                     <Button className='w-fit gap-2' onClick={onCreateAccount}>
-                        Submit
+                        Create my account
                     </Button>
 
                 </div>

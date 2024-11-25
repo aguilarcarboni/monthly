@@ -12,6 +12,7 @@ interface PayBillProps {
 }
 
 const PayBill = ({ bill, onClose }: PayBillProps) => {
+  
   const [cardNumber, setCardNumber] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
   const [cvv, setCvv] = useState('');

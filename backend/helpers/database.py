@@ -42,7 +42,7 @@ class DatabaseHandler:
             except Exception as e:
                 session.rollback()
                 logger.error(f"Database error in {func.__name__}: {str(e)}")
-                return Response.error(f"Database error: {str(e)}")
+                raise Exception(e)
             finally:
                 session.close()
         return wrapper
@@ -54,12 +54,6 @@ class DatabaseHandler:
 
             try:
                 tbl = Table(table, self.metadata, autoload_with=self.engine)
-                current_time = datetime.now()
-                data = {
-                    'created': current_time,
-                    'updated': current_time,
-                    **data
-                }
                 new_record = tbl.insert().values(**data)
                 result = session.execute(new_record)
                 session.flush()
@@ -90,9 +84,6 @@ class DatabaseHandler:
 
                 if not item:
                     return Response.error(f"{table.capitalize()} with given parameters not found")
-                
-                logger.info(f'Updating entry timestamp.')
-                data['updated'] = datetime.now()
 
                 query.update(data)
                 session.flush()
@@ -156,7 +147,7 @@ class DatabaseHandler:
                 session.flush()
 
                 logger.success(f"Successfully deleted entry with id: {item.id} from table: {table}.")
-                return item.as_dict()
+                return item.id
             
             except SQLAlchemyError as e:
                 logger.error(f"Error deleting {table}: {str(e)}")

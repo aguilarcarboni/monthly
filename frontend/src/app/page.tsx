@@ -1,10 +1,14 @@
 "use client"
 import { Button } from '@/components/ui/button'
+import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
 const Home = () => {
+
+  const {data: session} = useSession()
+
   return (
     <div className="h-full w-full flex items-center justify-center">
       <div className="text-center flex justify-center items-center gap-5 flex-col">
@@ -18,8 +22,8 @@ const Home = () => {
           Have your expenses work for you
         </p>
         <Button className='w-fit'>
-          <Link href="/onboarding">
-            Save money today
+          <Link href={!session || !session.user ? '/onboarding' : '/bills'}>
+            {!session || !session.user ? 'Get Started' : 'My Bills'}
           </Link>
         </Button>
       </div>

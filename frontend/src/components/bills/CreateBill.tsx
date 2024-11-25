@@ -43,10 +43,6 @@ const CreateBill = ({ setBills, setCreatingBill }: Props) => {
 
         const today = new Date();
         const dueDateObj = new Date(dueDate);
-        if (dueDateObj <= today) {
-          toast({ title: "Error", description: "Due date must be in the future." });
-          throw new Error("Due date must be in the future.");
-        }
 
         const response = await BillController.findAll();
         if (response['status'] !== 'success') {
