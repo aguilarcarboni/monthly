@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
-import { BillController } from '../../../controllers/BillController'
-import { Bill } from '@/types/Bill'
+import { BillController } from '../../utils/controllers/BillController'
+import { Bill } from '@/lib/types/Bill'
 import { useToast } from '@/hooks/use-toast'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
 

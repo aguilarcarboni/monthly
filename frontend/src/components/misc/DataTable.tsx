@@ -26,7 +26,6 @@ import {
 
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -38,7 +37,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 import { cn } from "@/lib/utils"
-import { Map } from "@/lib/types"
+import { Map } from "@/lib/types/misc"
 import { Info } from "lucide-react"
 import {
   Tooltip,

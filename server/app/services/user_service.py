@@ -1,8 +1,9 @@
-logger.announcement('Initializing User Service', 'info')
-
 from app.helpers.logger import logger
 from app.helpers.response import Response
-from app.repositories.user_repository import User, create, delete, read
+from backend.repositories.user_repository import User, db
+
+logger.announcement('Initializing User Service', 'info')
+logger.announcement('User Service initialized', 'success')
 
 class UserService:
 
@@ -11,23 +12,21 @@ class UserService:
 
     def createUser(self, user: User):
         try:
-            response = create(data=user)
+            response = db.create(table='users', data=user)
             return Response.success(response)
         except Exception as e:
             return Response.error(e)
 
     def deleteUser(self, userID: str):
         try:
-            response = delete(params={"id": userID})
+            response = db.delete(table='users', params={"id": userID})
             return Response.success(response)
         except Exception as e:
             return Response.error(e)
         
     def findAll(self):
         try:
-            response = read()
+            response = db.read(table='users')
             return Response.success(response)
         except Exception as e:
             return Response.error(e)
-        
-logger.announcement('User Service initialized', 'success')

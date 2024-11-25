@@ -1,15 +1,11 @@
-from flask import Flask, request
+from flask import Flask
 from flask_cors import CORS
-from werkzeug.middleware.proxy_fix import ProxyFix
-from flask_jwt_extended import JWTManager, verify_jwt_in_request, create_access_token, exceptions
 import os
-import logging
 from flask import jsonify
-from logging.handlers import RotatingFileHandler
-
 from app.helpers.logger import logger
-
 from dotenv import load_dotenv
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 load_dotenv()
 

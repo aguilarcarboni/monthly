@@ -9,44 +9,27 @@ BillService = BillService()
 @bp.route('/create', methods=['POST'])
 def create_bill_route():
     payload = request.get_json()
-    try:
-        bill = payload['bill']
-        response = BillService.createBill(bill)
-        return response
-    except Exception as e:
-        return Response.error(e)
+    bill = payload['bill']
+    return BillService.createBill(bill)
 
 @bp.route('/updateBill', methods=['POST'])
 def update_bill_route():
     payload = request.get_json()
     billID = payload['billID']
     updatedBill = payload['updatedBill']  # Extract the updated bill data from the request
-    try:
-        response = BillService.updateBill(billID, updatedBill)
-        return response
-    except Exception as e:
-        error_message = str(e)  # Convertir el error a cadena
-        return Response.error(error_message)
+    return BillService.updateBill(billID, updatedBill)
 
 # Route to delete a bill
 @bp.route('/deleteBill', methods=['POST'])
 def delete_bill_route():
     payload = request.get_json()
     billID = payload['billID']
-    try:
-        response = BillService.deleteBill(billID)
-        return response
-    except Exception as e:
-        return Response.error(e)
+    return BillService.deleteBill(billID)
 
 # Route to get all bills
 @bp.route('/findAll', methods=['GET'])
 def find_all_route():
-    try:
-        response = BillService.findAll()
-        return response
-    except Exception as e:
-        return Response.error(e)
+    return BillService.findAll()
 
 # Route to schedule a bill reminder
 @bp.route('/scheduleBillReminder', methods=['POST'])
@@ -54,19 +37,11 @@ def schedule_bill_reminder_route():
     payload = request.get_json()
     billID = payload['billID']
     highPriority = payload['highPriority']
-    try:
-        response = BillService.scheduleBillReminder(billID, highPriority)
-        return response
-    except Exception as e:
-        return Response.error(e)
+    return BillService.scheduleBillReminder(billID, highPriority)
 
 # Route to initiate a payment for a bill
 @bp.route('/initiatePayment', methods=['POST'])
 def initiate_payment_route():
     payload = request.get_json()
     billID = payload['billID']
-    try:
-        response = BillService.processBillPayment(billID)
-        return response
-    except Exception as e:
-        return Response.error(e)
+    return BillService.processBillPayment(billID)

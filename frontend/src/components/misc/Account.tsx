@@ -35,7 +35,7 @@ const Account = ({}: Props) => {
                       :
                       <p className='text-sm'>Anonymous</p>
                     }
-                    
+
                     {session.user.image ?
                       <img className='rounded-full w-10 h-10' src={session?.user.image!} referrerPolicy="no-referrer" alt={'Missing'}/>
                       :
@@ -55,13 +55,6 @@ const Account = ({}: Props) => {
                   <Button onClick={() => signOut({callbackUrl: '/'}) } className="flex">
                       <p className="text-sm">Sign out</p>
                   </Button>
-                  <Link href="/profile" legacyBehavior passHref>
-                  <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), '')}>
-                      <div className="flex">
-                          <p className="text-sm">Settings</p>
-                      </div>
-                  </NavigationMenuLink>
-                </Link>
                 </motion.div>
               </PopoverContent>
             </Popover>

@@ -2,6 +2,7 @@ import { NextAuthOptions, User } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { accessAPI } from "@/utils/api"
 import { toast } from "@/hooks/use-toast"
+import { UserController } from "@/utils/controllers/UserController"
 
 export const authOptions: NextAuthOptions = {
 
@@ -18,8 +19,8 @@ export const authOptions: NextAuthOptions = {
             try {
 
               // Fetch user profile the user service
-              const response = await accessAPI('/user_service/findAll', 'GET')
-
+              const response = await UserController.findAll()
+              
               // Find user by email and password
               const user:User = response['content'].filter((user:User) => user.email === credentials.email && user.password === credentials.password)[0]
               

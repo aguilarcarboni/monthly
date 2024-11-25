@@ -1,4 +1,4 @@
-import { Bill } from "@/types/Bill";
+import { Bill } from "@/lib/types/Bill";
 import { accessAPI } from "@/utils/api";
 
 export class BillController {
@@ -60,6 +60,9 @@ export class BillController {
 
     static async findAll() {
         const response = await accessAPI('/bill_service/findAll', 'GET');
+        if (response['status'] !== 'success') {
+            throw new Error('Failed to find all bills');
+        }
         return response;
     }
 

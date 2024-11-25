@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/hooks/use-toast';
-import { User } from '@/types/User';
+import { User } from '@/lib/types/User';
 import { accessAPI } from '@/utils/api';
 import { PlusIcon } from 'lucide-react';
 import { signIn } from 'next-auth/react';
