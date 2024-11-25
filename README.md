@@ -1,10 +1,11 @@
-# Bill Tracker
+# Monthly
 
 ## Software Engineering
 
 ### Description
 
-This project is a web application that does stuff!
+This project is a bill tracker application that allows users to track their bills and expenses.
+Has a fully local SQLite database, a fully functional flask API with CRUD operations for bills and expenses, and a fully functional React frontend that allows users to view, add, edit, and delete bills and expenses along with a fully functional authentication system using NextAuth.
 
 ### Prerequisites
 
