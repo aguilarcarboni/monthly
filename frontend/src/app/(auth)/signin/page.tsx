@@ -4,20 +4,17 @@ import { signIn } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Loader2 } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import { Card, CardContent, CardTitle, CardHeader } from '@/components/ui/card';
 
 function SignIn() {
 
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl');
 
   const {toast} = useToast()
 
@@ -25,13 +22,13 @@ function SignIn() {
     e.preventDefault();
     setIsLoading(true);
     const result = await signIn('credentials', {
-      username,
+      email,
       password,
       redirect: false,
-      callbackUrl: callbackUrl ? callbackUrl : '/',
     });
+
     if (result?.ok) {
-      router.push(callbackUrl ? callbackUrl : '/');
+      router.push('/');
     } else {
       toast({
         title: 'Error',
@@ -42,32 +39,26 @@ function SignIn() {
   }
 
   return (
-    <div className='flex items-center justify-center min-h-screen'>
+    <div className='flex items-center justify-center my-64'>
       <Card className='w-96 h-fit gap-5 flex flex-col justify-center items-center'>
         <CardHeader className='flex flex-col gap-2'>
-        <CardTitle className='text-center text-3xl' >Sign In</CardTitle>
-        <div className='flex flex-col gap-2 bg-error/20 p-2 rounded-md items-center justify-center'>
-            <p className='text-sm text-subtitle text-center'>You must create an account to use the app's services.</p>
-            <Link 
-              href={
-                callbackUrl ? 
-                `/create-account?callbackUrl=${encodeURIComponent(callbackUrl)}` 
-                : 
-                '/create-account'
-              } 
-              className='underline text-subtitle font-bold'
-            >
-              Create an account
-            </Link> 
-        </div>
+        <CardTitle className='text-center font-bold text-4xl' >Sign In</CardTitle>
+        <Button variant='ghost' className='w-fit'>
+          <Link 
+                href='/onboarding'
+                className='underline text-subtitle'
+              >
+                Create an account
+          </Link> 
+        </Button>
       </CardHeader>
       <CardContent className='w-full'>
         <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
           <Input
             type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+              placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
             disabled={isLoading}
           />

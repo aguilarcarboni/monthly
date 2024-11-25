@@ -7,7 +7,6 @@ import { NavigationMenuLink } from '@radix-ui/react-navigation-menu'
 import { navigationMenuTriggerStyle } from '../ui/navigation-menu'
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { motion, AnimatePresence } from 'framer-motion' // Add this import
-import { getCallbackUrl } from '@/utils/url'
 
 type Props = {
 }
@@ -15,8 +14,6 @@ type Props = {
 const Account = ({}: Props) => {
   
   const {data:session} = useSession()
-  
-  let callbackUrl = getCallbackUrl(window.location.pathname);
 
   return (
     <div className='h-fit w-full flex flex-col justify-center items-center'>
@@ -32,16 +29,17 @@ const Account = ({}: Props) => {
               <PopoverTrigger asChild className='w-fit h-full'>
                 <Button variant='ghost' className='flex flex-col hover:bg-muted gap-y-5 w-full h-full hover:bg-agm-black/5'>
                   <div className='flex w-full text-agm-dark-blue h-full items-center gap-x-5'>
-                    {session.user.image ?
-                      <img className='rounded-full w-10 h-10' src={session?.user.image!} referrerPolicy="no-referrer" alt={'Missing'}/>
-                      :
-                      <div className='w-10 h-10 rounded-full bg-primary'></div>
-                    }
 
                     {session.user.name ?
                       <p className='text-sm'>{session?.user.name}</p>
                       :
                       <p className='text-sm'>Anonymous</p>
+                    }
+                    
+                    {session.user.image ?
+                      <img className='rounded-full w-10 h-10' src={session?.user.image!} referrerPolicy="no-referrer" alt={'Missing'}/>
+                      :
+                      <div className='w-10 h-10 rounded-full bg-primary'></div>
                     }
                   </div>
                 </Button>
@@ -54,7 +52,7 @@ const Account = ({}: Props) => {
                   transition={{ duration: 0.2 }}
                   className='w-fit h-full flex text-agm-dark-blue justify-center items-center'
                 >
-                  <Button onClick={() => signOut({callbackUrl: callbackUrl ? callbackUrl : '/'}) } className="flex">
+                  <Button onClick={() => signOut({callbackUrl: '/'}) } className="flex">
                       <p className="text-sm">Sign out</p>
                   </Button>
                   <Link href="/profile" legacyBehavior passHref>
@@ -80,12 +78,7 @@ const Account = ({}: Props) => {
               className="flex w-fit h-full justify-center items-center"
             >
               <Link 
-                href={
-                  callbackUrl ? 
-                    `/signin?callbackUrl=${encodeURIComponent(callbackUrl)}` 
-                    : 
-                    '/signin'
-                }
+                href= '/signin'
               >
                 <p className="text-sm">Sign in</p>
               </Link>

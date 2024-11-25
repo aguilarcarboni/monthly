@@ -7,9 +7,10 @@ import { cn } from '@/lib/utils'
 import { Toaster } from '@/components/ui/toaster'
 import { Analytics } from "@vercel/analytics/react"
 import Header from '@/components/main/Header'
+import { NextAuthProvider } from '@/utils/providers/NextAuthProvider'
 
 export const metadata: Metadata = {
-  title: 'Bill Tracker',
+  title: 'Monthly',
 };
 
 export default function RootLayout({
@@ -25,12 +26,15 @@ export default function RootLayout({
             defaultTheme="light"
             disableTransitionOnChange
           >
-          <div className='h-full w-full p-5 gap-10 flex flex-col'>
-            {children}
+          <NextAuthProvider>
+            <div className='h-full w-full p-5 gap-10 flex flex-col'>
+              <Header />
+              {children}
+            </div>
             <Toaster/>
             <SpeedInsights />
             <Analytics />
-          </div>
+          </NextAuthProvider>
           </ThemeProvider>
       </body>
     </html>

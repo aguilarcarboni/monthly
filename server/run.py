@@ -10,6 +10,7 @@ from logging.handlers import RotatingFileHandler
 from app.helpers.logger import logger
 
 from dotenv import load_dotenv
+
 load_dotenv()
 
 def create_app():
@@ -17,8 +18,9 @@ def create_app():
     cors = CORS(app, resources={r"/*": {"origins": "*"}})
     app.config['CORS_HEADERS'] = 'Content-Type'
 
-    from app.routes import bill_service
-    app.register_blueprint(bill_service.bp, url_prefix='/bill_service')
+    from app.routes import user_routes, bill_routes
+    app.register_blueprint(bill_routes.bp, url_prefix='/bill_service')
+    app.register_blueprint(user_routes.bp, url_prefix='/user_service')
 
     @app.route('/', methods=['GET'])
     def index():

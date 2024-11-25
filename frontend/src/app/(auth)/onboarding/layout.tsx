@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "../../globals.css";
 
 export const metadata: Metadata = {
-  title: "Sign In",
-  description: "Sign In",
+  title: "Onboarding",
+  description: "Onboarding",
 };
 
 export default function Layout({
@@ -13,8 +13,8 @@ export default function Layout({
 }>) {
 
   return (
-      <div className="flex flex-col scrollbar-hide h-full w-full scroll-smooth">
-        {children}
-      </div>
+    <div className="flex flex-col scrollbar-hide justify-center items-center h-full w-full scroll-smooth">
+      {children}
+    </div>
   );
 }

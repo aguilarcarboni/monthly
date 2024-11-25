@@ -1,27 +1,30 @@
+'use client'
+
+import { useSession } from "next-auth/react"
 import "../globals.css"
-import { NextAuthProvider } from "../../utils/providers/NextAuthProvider"
-import Header from "@/components/main/Header";
+import { Lock } from "lucide-react"
+import Account from "@/components/misc/Account"
 
-export default async function Layout(
-  props: Readonly<{
-    children: React.ReactNode
-    params:Promise<{lang:string}>
-  }>
-) {
-  const params = await props.params;
+export default function Layout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
 
-  const {
-    lang
-  } = params;
+  const {data:session} = useSession()
 
-  const {
-    children
-  } = props;
+  if (!session || !session.user) {
+    return <div className="h-full w-full flex flex-col gap-5 justify-center items-center">
+      <Lock className="w-32 h-32"/>
+      <p className="text-7xl font-bold">Oops!</p>
+      <p className="text-lg">Login to view your bills.</p>
+      <Account/>
+    </div>
+  }
 
   return (
-    <NextAuthProvider>
-        <Header />
-        {children}
-    </NextAuthProvider>
+    <div className="h-full w-full">
+      {children}
+    </div>
   )
 }

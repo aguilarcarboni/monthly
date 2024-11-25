@@ -1,17 +1,16 @@
+logger.announcement('Initializing Bill Service', 'info')
+
 from app.helpers.logger import logger
 from app.repositories.bill_repository import create, update, read, delete
 from app.helpers.response import Response
 from app.repositories.bill_repository import Bill
-
-logger.announcement('Initializing Bill Service', 'info')
-logger.announcement('Bill Service initialized', 'success')
 
 class BillService:
     def __init__(self):
         pass
 
     # Create a new bill
-    def create(self, bill: Bill):
+    def createBill(self, bill: Bill):
         response = create(data=bill)
         return Response.success(response)
 
@@ -39,3 +38,5 @@ class BillService:
     def findAll(self):
         response = read()['content']
         return Response.success(response)
+
+logger.announcement('Bill Service initialized', 'success')

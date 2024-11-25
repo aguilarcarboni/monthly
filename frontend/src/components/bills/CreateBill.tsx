@@ -5,7 +5,7 @@ import { PlusIcon } from 'lucide-react'
 import { BillController } from '../../../controllers/BillController'
 import { Bill } from '@/types/Bill'
 import { useToast } from '@/hooks/use-toast'
-import { randomUUID } from 'crypto'
+
 import {
   Dialog,
   DialogContent,
@@ -29,6 +29,7 @@ type Props = {
 }
 
 const CreateBill = ({ setBills, setCreatingBill }: Props) => {
+
     const { toast } = useToast();
     const [name, setName] = useState<string>('');
     const [amount, setAmount] = useState<number>(100);

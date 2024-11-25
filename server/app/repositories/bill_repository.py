@@ -10,6 +10,7 @@ from app.helpers.response import Response
 from functools import wraps
 
 # TODO: Add encryption to the database
+logger.announcement('Initializing Bill Repository', 'info')
 
 Base = declarative_base()
 
@@ -25,8 +26,6 @@ class Bill(Base):
     renewal = Column(String)
     status = Column(String, default='pending')
 
-logger.announcement('Initializing Database Service', 'info')
-
 db_path = os.path.join(os.path.dirname(__file__), '..', 'db', 'bill_repository.db')
 db_url = f'sqlite:///{db_path}'
 
@@ -35,8 +34,7 @@ Base.metadata.create_all(engine)
 
 metadata = MetaData()
 metadata.reflect(bind=engine)
-logger.announcement('Database Service initialized', 'success')
-
+logger.announcement('Bill Repository initialized', 'success')
 
 def with_session(func):
     @wraps(func)

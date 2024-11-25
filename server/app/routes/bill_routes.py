@@ -1,7 +1,6 @@
-from flask import Blueprint, request, Flask, jsonify
-from app.modules.bill_service import BillService
+from flask import Blueprint, request
+from app.services.bill_service import BillService
 from app.helpers.response import Response
-from app.helpers.logger import logger
 
 bp = Blueprint('bill_service', __name__)
 BillService = BillService()
@@ -12,7 +11,7 @@ def create_bill_route():
     payload = request.get_json()
     try:
         bill = payload['bill']
-        response = BillService.create(bill)
+        response = BillService.createBill(bill)
         return response
     except Exception as e:
         return Response.error(e)

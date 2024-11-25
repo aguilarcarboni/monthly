@@ -1,6 +1,7 @@
 import { NextAuthOptions, User } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { accessAPI } from "@/utils/api"
+import { toast } from "@/hooks/use-toast"
 
 export const authOptions: NextAuthOptions = {
 
@@ -8,32 +9,33 @@ export const authOptions: NextAuthOptions = {
       CredentialsProvider({
         name: 'Credentials',
         credentials: {
-          username: { label: "Username", type: "text", placeholder: "jsmith" },
+          email: { label: "Email", type: "text", placeholder: "jsmith@example.com" },
           password: { label: "Password", type: "password" }
         },
         async authorize(credentials) {
 
-          if (credentials?.username && credentials?.password) {
+          if (credentials?.email && credentials?.password) {
             try {
 
-              // Fetch user profile from same database where Google Auth is stored
-              const response = await accessAPI('/database/read', 'POST', {
-                path: 'users',
-                query: {
-                  'username': credentials.username,
-                  'password': credentials.password
-                }
-              })
+              // Fetch user profile the user service
+              const response = await accessAPI('/user_service/findAll', 'GET')
 
-              const user:User = response['content'][0]
-              return user
+              // Find user by email and password
+              const user:User = response['content'].filter((user:User) => user.email === credentials.email && user.password === credentials.password)[0]
+              
+              if (user) return user
+              else throw new Error('Invalid username or password.')
 
             } catch (error) {
-
-              console.error('Authentication error:', error);
+              toast({
+                title: 'Error',
+                description: 'Invalid username or password.',
+                variant: 'error',
+              })
               return null;
             }
           }
+
           return null
         }
       }),
@@ -49,7 +51,7 @@ export const authOptions: NextAuthOptions = {
           token.image = user.image || null
           token.email = user.email || null
 
-          token.username = user.username || null
+          token.email = user.email || null
           token.password = user.password || null
 
         }
@@ -68,7 +70,7 @@ export const authOptions: NextAuthOptions = {
             session.user.email = token.email || null
             session.user.image = token.image || null
 
-            session.user.username = token.username || null
+            session.user.email = token.email || null
             session.user.password = token.password || null
 
           }
