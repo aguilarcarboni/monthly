@@ -37,12 +37,13 @@ classDiagram
         +addSubscription(Subscription)
         +pauseSubscription(String)
         +getSubscriptionDashboard()
+        +updateSubscription(subscriptionID: string, updatedSubscription: Subscription)
         +categorizeSubscription(subscriptionID : String)
         +setRenewalReminder(subscriptionID : String)
     }
 
     class SubscriptionService {
-        -subscriptionRepository SubscriptionRepository
+        +scheduleSubscriptionReminder(subscriptionID)
         +createSubscription(Subscription)
         +pauseSubscription(String)
         +updateSubscriptionStatus(String, String)
