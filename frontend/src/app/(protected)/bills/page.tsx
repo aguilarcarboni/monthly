@@ -151,6 +151,10 @@ const Home = () => {
           <CreateBill setBills={setBills} setCreatingBill={setCreatingBill} />
         </div>
 
+        {bills.length === 0 && (
+          <h1 className='text-2xl font-bold'>No bills found. Add a bill to get started.</h1>
+        )}
+
         <DataTable
           data={bills} 
           columns={columns}
