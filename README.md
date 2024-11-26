@@ -14,13 +14,13 @@ Clone the repository
 git clone https://github.com/aguilarcarboni/monthly.git
 ```
 
+[Install Node](https://nodejs.org/en/download/package-manager)
+
 Verify Node installation
 ```bash
 node -v
 npm -v
 ```
-
-[Install Node](https://nodejs.org/en/download/package-manager)
 
 Install yarn
 ```bash
