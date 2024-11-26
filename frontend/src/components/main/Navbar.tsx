@@ -21,17 +21,10 @@ import { useTheme } from 'next-themes'
 const Navbar = () => {
 
     const {data: session} = useSession()
-    const {theme, setTheme} = useTheme()
 
   return (
     <NavigationMenu>
         <NavigationMenuList>
-            
-            <Button variant='ghost' onClick={() => {
-                setTheme(theme === 'light' ? 'dark' : 'light')
-            }} className='flex items-center gap-2 hover:bg-transparent hover:text-primary'>
-               {theme === 'light' ? <Moon/> : <Sun/>}
-            </Button>
 
             <NavigationMenuItem key='home'>
                 <Link href='/' legacyBehavior passHref>
