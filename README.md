@@ -48,6 +48,9 @@ cd server
 
 ### Running the frontend
 
+Add enviornment file to the repository
+
+Start frontend
 ```bash
 cd ../frontend
 yarn
