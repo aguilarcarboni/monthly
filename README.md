@@ -9,17 +9,27 @@ Has a fully local SQLite database, a fully functional flask API with CRUD operat
 
 ### Prerequisites
 
+Clone the repository
+```bash
+git clone https://github.com/aguilarcarboni/monthly.git
+```
+
+[Install Node](https://nodejs.org/en/download/package-manager)
+
 Verify Node installation
 ```bash
 node -v
 npm -v
 ```
 
-[Install Node](https://nodejs.org/en/download/package-manager)
-
 Install yarn
 ```bash
 npm install --global yarn
+```
+
+Verify Python installation
+```bash
+python/python3 --version
 ```
 
 ### Running the API
