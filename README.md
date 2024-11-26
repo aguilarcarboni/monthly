@@ -36,12 +36,12 @@ python/python3 --version
 
 Install the dependencies
 ```bash
+cd server
 pip install -r requirements.txt
 ```
 
 Run the server
 ```bash
-cd server
 ./run.sh
 
 ```
@@ -54,13 +54,16 @@ NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET="rBAIu7aeNddKRikxClCFXWQ+JycplaLBsBy71VBf3tw="
 ```
 
-Start frontend
+Build the frontend
 ```bash
 cd ../frontend
 yarn
-yarn dev
 ```
 
+Start frontend
+```bash
+yarn dev
+```
 
 ### Results
 
