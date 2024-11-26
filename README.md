@@ -49,6 +49,10 @@ cd server
 ### Running the frontend
 
 Add enviornment file to the repository
+```code
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="rBAIu7aeNddKRikxClCFXWQ+JycplaLBsBy71VBf3tw="
+```
 
 Start frontend
 ```bash
