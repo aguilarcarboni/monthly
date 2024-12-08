@@ -4,7 +4,7 @@
 
 | ID  | User Story                                                                                                 | Estimation |
 |-----|------------------------------------------------------------------------------------------------------------|------------|
-| 1   | As a busy worker, I want to receive reminders about bill payments so I can ensure they’re on time.         | 5          |
+| 1   | As a freelancer, I want a forecast of upcoming expenses based on my income for effective budgeting.        | 5          |
 | 2   | As a busy worker, I want to quickly log new bills while on the go for efficient payment management.        | 5          |
 | 7   | As an elderly person, I want a guided payment process to make payments easily without confusion.           | 4          |
 | 8   | As an elderly person, I want secure handling of my financial information to manage finances privately.     | 5          |
