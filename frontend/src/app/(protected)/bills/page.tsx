@@ -26,6 +26,8 @@ const Home = () => {
     const dueDate = new Date(bill.dueDate);
     if (bill.paid) {
       return "paid";
+    } else if (bill.status === "paused") {
+      return "paused";
     } else if (dueDate < today) {
       return "overdue";
     } else {
@@ -63,6 +65,7 @@ const Home = () => {
         if (status === "paid") statusStyle = "bg-green-100 text-green-700";
         else if (status === "pending") statusStyle = "bg-yellow-100 text-yellow-700";
         else if (status === "overdue") statusStyle = "bg-red-100 text-red-700";
+        else if (status === "paused") statusStyle = "bg-gray-100 text-gray-700";
 
         return (
           <span className={`px-2 py-1 rounded-full text-sm font-bold ${statusStyle}`}>
@@ -85,45 +88,24 @@ const Home = () => {
           status: updateStatus(bill),
         }));
 
-        // Sort bills by due date
-        const sortedBills = [...updatedBills].sort((a, b) => 
-          new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
-        );
+        setBills(updatedBills);
 
-        setBills(sortedBills);
-
-        // Reminder notification for overdue bills
+        // Reminder notification for due bills
         const dueBills = updatedBills.filter((bill: Bill) => bill.status === "overdue");
         if (dueBills.length > 0) {
           toast({ title: "Reminder", description: `${dueBills.length} bill(s) are overdue.` });
         }
 
-        // Check for bills due in the next week
-        const today = new Date();
-        const nextWeek = new Date(today);
-        nextWeek.setDate(today.getDate() + 7);
-        
-        const billsDueNextWeek = updatedBills.filter((bill: Bill) => {
-          const dueDate = new Date(bill.dueDate);
-          return !bill.paid && dueDate > today && dueDate <= nextWeek;
-        });
-
-        if (billsDueNextWeek.length > 0) {
-          toast({ 
-            title: "Upcoming Bills", 
-            description: `${billsDueNextWeek.length} bill(s) are due in the next week.` 
-          });
-        }
-
         // Generate reminders for bills that are not overdue
+        const today = new Date();
         updatedBills.forEach((bill: Bill) => {
-          if (bill.status !== "overdue") {
+          if (bill.status !== "overdue" && bill.status !== "paused") {
             const dueDate = new Date(bill.dueDate);
             const alertDate = new Date(dueDate);
             alertDate.setDate(alertDate.getDate() - bill.alertDaysBefore);
 
             if (alertDate.toDateString() === today.toDateString()) {
-              toast({ title: "Reminder", description: `${bill.name} is due in ${bill.alertDaysBefore} day(s).`});
+              toast({ title: "Reminder", description: `Reminder: ${bill.name} is due in ${bill.alertDaysBefore} day(s).`});
             }
           }
         });
@@ -151,10 +133,31 @@ const Home = () => {
     }
   }
 
+  async function handlePauseBill(bill: Bill | null) {
+    if (!bill) return;
+
+    try {
+      const updatedBill = { ...bill, status: bill.status === "paused" ? "pending" : "paused" };
+      await BillController.updateBill(bill.id, updatedBill);
+      setBills(prevBills => prevBills?.map(b => b.id === bill.id ? updatedBill : b) || null);
+      toast({ title: "Success", description: `Bill ${updatedBill.status === "paused" ? "paused" : "reactivated"} successfully.` });
+    } catch (error) {
+      const errorMessage = (error as Error).message;
+      toast({ title: "Error", description: errorMessage });
+    }
+  }
+
   const handleEditAlert = (row: any) => {
-    const selectedBill = row; // Assuming row contains the bill object
+    if (row.status === "paused") {
+      toast({ 
+        title: "Error", 
+        description: "Cannot set alerts for paused bills. Reactivate the bill first." 
+      });
+      return;
+    }
+    const selectedBill = row;
     setSelection(selectedBill);
-    setIsSubscriptionOpen(true); // Open the Subscription modal
+    setIsSubscriptionOpen(true);
   };
 
   async function handlePayment(bill: Bill | null) {
@@ -171,6 +174,10 @@ const Home = () => {
     {
       label: 'Pay',
       onClick: (row: any) => handlePayment(row)
+    },
+    {
+      label: 'Toggle Pause',
+      onClick: (row: any) => handlePauseBill(row)
     },
     {
       label: 'Edit Alert',
@@ -191,7 +198,7 @@ const Home = () => {
         animate="visible"
       >
         <div className='flex items-center justify-between gap-y-4'>
-          <h1 className='text-5xl font-semibold'>Check out your bills...</h1>
+          <h1 className='text-5xl font-semibold'>Bill Manager</h1>
           <CreateBill setBills={setBills} setCreatingBill={setCreatingBill} />
         </div>
 
