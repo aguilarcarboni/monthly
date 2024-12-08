@@ -34,13 +34,35 @@ const Navbar = () => {
                 </Link>
             </NavigationMenuItem>
 
-            <NavigationMenuItem key='bills'>
-                <Link href={!session || !session.user ? '/onboarding' : '/bills'} legacyBehavior passHref>
-                    <NavigationMenuLink className={cn(navigationMenuTriggerStyle())}>
-                        {!session || !session.user ? 'Onboarding' : 'My Bills'}
-                    </NavigationMenuLink>
-                </Link>
-            </NavigationMenuItem>
+            {session && session.user ? (
+                <>
+                    <NavigationMenuItem key='bills'>
+                        <Link href={'/bills'} legacyBehavior passHref>
+                            <NavigationMenuLink className={cn(navigationMenuTriggerStyle())}>
+                                My bills
+                            </NavigationMenuLink>
+                        </Link>
+                    </NavigationMenuItem>
+
+                    <NavigationMenuItem key='charts'>
+                        <Link href='/charts' legacyBehavior passHref>
+                            <NavigationMenuLink className={cn(navigationMenuTriggerStyle())}>
+                                Charts
+                            </NavigationMenuLink>
+                        </Link>
+                    </NavigationMenuItem>
+                </>
+            ) : (
+                <>
+                    <NavigationMenuItem key='onboarding'>
+                        <Link href='/onboarding' legacyBehavior passHref>
+                            <NavigationMenuLink className={cn(navigationMenuTriggerStyle())}>
+                                Getting started
+                            </NavigationMenuLink>
+                        </Link>
+                    </NavigationMenuItem>
+                </>
+            )}
 
             <Account/>
 

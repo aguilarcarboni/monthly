@@ -309,7 +309,7 @@ export const DataTable = <TData,>({
         </TableBody>
       </Table>
       {enablePagination && (
-        <div className="flex items-center justify-between space-x-2 py-4">
+        <div className="flex items-center p-3 justify-between space-x-2 py-4">
           <div className="space-x-2 flex items-center">
             <motion.div variants={buttonVariants} whileHover="hover" whileTap="tap">
               <Button

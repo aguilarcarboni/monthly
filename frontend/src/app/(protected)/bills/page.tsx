@@ -85,16 +85,37 @@ const Home = () => {
           status: updateStatus(bill),
         }));
 
-        setBills(updatedBills);
+        // Sort bills by due date
+        const sortedBills = [...updatedBills].sort((a, b) => 
+          new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
+        );
 
-        // Reminder notification for due bills
+        setBills(sortedBills);
+
+        // Reminder notification for overdue bills
         const dueBills = updatedBills.filter((bill: Bill) => bill.status === "overdue");
         if (dueBills.length > 0) {
           toast({ title: "Reminder", description: `${dueBills.length} bill(s) are overdue.` });
         }
 
-        // Generate reminders for bills that are not overdue
+        // Check for bills due in the next week
         const today = new Date();
+        const nextWeek = new Date(today);
+        nextWeek.setDate(today.getDate() + 7);
+        
+        const billsDueNextWeek = updatedBills.filter((bill: Bill) => {
+          const dueDate = new Date(bill.dueDate);
+          return !bill.paid && dueDate > today && dueDate <= nextWeek;
+        });
+
+        if (billsDueNextWeek.length > 0) {
+          toast({ 
+            title: "Upcoming Bills", 
+            description: `${billsDueNextWeek.length} bill(s) are due in the next week.` 
+          });
+        }
+
+        // Generate reminders for bills that are not overdue
         updatedBills.forEach((bill: Bill) => {
           if (bill.status !== "overdue") {
             const dueDate = new Date(bill.dueDate);
@@ -102,7 +123,7 @@ const Home = () => {
             alertDate.setDate(alertDate.getDate() - bill.alertDaysBefore);
 
             if (alertDate.toDateString() === today.toDateString()) {
-              toast({ title: "Reminder", description: `Reminder: ${bill.name} is due in ${bill.alertDaysBefore} day(s).`});
+              toast({ title: "Reminder", description: `${bill.name} is due in ${bill.alertDaysBefore} day(s).`});
             }
           }
         });
@@ -170,7 +191,7 @@ const Home = () => {
         animate="visible"
       >
         <div className='flex items-center justify-between gap-y-4'>
-          <h1 className='text-5xl font-semibold'>Bill Manager</h1>
+          <h1 className='text-5xl font-semibold'>Check out your bills...</h1>
           <CreateBill setBills={setBills} setCreatingBill={setCreatingBill} />
         </div>
 
