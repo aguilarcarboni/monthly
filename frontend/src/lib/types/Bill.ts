@@ -7,4 +7,6 @@ export interface Bill {
     category: string;
     renewal: string;
     status: string;
+    isAlertEnabled: boolean;
+    alertDaysBefore: number;
 }

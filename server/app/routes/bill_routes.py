@@ -45,3 +45,7 @@ def initiate_payment_route():
     payload = request.get_json()
     billID = payload['billID']
     return BillService.processBillPayment(billID)
+
+@bp.route('/pauseReminders', methods=['POST'])
+def pause_reminders(bill_id: str):
+    return BillService.pause_reminders(bill_id)

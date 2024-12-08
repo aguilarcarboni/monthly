@@ -56,3 +56,11 @@ class BillService:
             return Response.success(response)
         except Exception as e:
             return Response.error(e)
+
+    def pause_reminders(self, bill_id: str):
+        bill = db.session.query(Bill).filter(Bill.id == bill_id).first()
+        if bill:
+            bill.isAlertEnabled = False  # Pause alerts
+            db.session.commit()
+            return {"status": "success"}
+        return {"status": "error", "message": "Bill not found"}

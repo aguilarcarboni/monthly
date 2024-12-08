@@ -61,7 +61,9 @@ const CreateBill = ({ setBills, setCreatingBill }: Props) => {
             paid: false,
             category: category,
             renewal: renewal,
-            status: 'pending'
+            status: 'pending',
+            isAlertEnabled: false,
+            alertDaysBefore: 3,
         }
     
         try {

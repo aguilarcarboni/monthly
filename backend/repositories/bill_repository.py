@@ -20,6 +20,8 @@ class Bill(Base):
     category = Column(String)
     renewal = Column(String)
     status = Column(String, default='pending')
+    isAlertEnabled = Column(Boolean, default=False)
+    alertDaysBefore = Column(Integer, default=3)
 
 db_path = os.path.join(os.path.dirname(__file__), '..', 'db', 'bill_repository.db')
 db_url = f'sqlite:///{db_path}'

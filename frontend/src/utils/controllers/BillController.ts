@@ -101,4 +101,13 @@ export class BillController {
         }
         return response;
     }
+
+    // Add this method to the BillController class
+    static async pauseReminders(billID: string) {
+        const response = await accessAPI('/bill_service/pauseReminders', 'POST', { billID });
+        if (response['status'] !== 'success') {
+            throw new Error('Failed to pause reminders');
+        }
+        return response;
+    }
 }

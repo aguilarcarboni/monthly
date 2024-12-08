@@ -8,6 +8,7 @@ import { ColumnDefinition, DataTable } from '@/components/misc/DataTable'
 import { toast } from '@/hooks/use-toast'
 import CreateBill from '@/components/bills/CreateBill'
 import PayBill from '@/components/bills/PayBill'
+import SubscriptionComponent from '@/components/bills/Subscription';
 
 const Home = () => {
   const [bills, setBills] = useState<Bill[] | null>(null);
@@ -17,6 +18,7 @@ const Home = () => {
 
   const [selection, setSelection] = useState<Bill | null>(null);
   const [isPayBillOpen, setIsPayBillOpen] = useState(false);
+  const [isSubscriptionOpen, setIsSubscriptionOpen] = useState(false);
 
   // Determine the status of a bill
   const updateStatus = (bill: Bill): string => {
@@ -90,6 +92,21 @@ const Home = () => {
         if (dueBills.length > 0) {
           toast({ title: "Reminder", description: `${dueBills.length} bill(s) are overdue.` });
         }
+
+        // Generate reminders for bills that are not overdue
+        const today = new Date();
+        updatedBills.forEach((bill: Bill) => {
+          if (bill.status !== "overdue") {
+            const dueDate = new Date(bill.dueDate);
+            const alertDate = new Date(dueDate);
+            alertDate.setDate(alertDate.getDate() - bill.alertDaysBefore);
+
+            if (alertDate.toDateString() === today.toDateString()) {
+              toast({ title: "Reminder", description: `Reminder: ${bill.name} is due in ${bill.alertDaysBefore} day(s).`});
+            }
+          }
+        });
+
       } catch (error) {
         const errorMessage = (error as Error).message;
         toast({ title: "Error", description: errorMessage });
@@ -113,9 +130,11 @@ const Home = () => {
     }
   }
 
-  async function handleEditBill(bill: Bill | null) {
-    if (!bill) return;
-  }
+  const handleEditAlert = (row: any) => {
+    const selectedBill = row; // Assuming row contains the bill object
+    setSelection(selectedBill);
+    setIsSubscriptionOpen(true); // Open the Subscription modal
+  };
 
   async function handlePayment(bill: Bill | null) {
     if (!bill) return;
@@ -131,6 +150,10 @@ const Home = () => {
     {
       label: 'Pay',
       onClick: (row: any) => handlePayment(row)
+    },
+    {
+      label: 'Edit Alert',
+      onClick: (row: any) => handleEditAlert(row)
     }
   ];
 
@@ -161,7 +184,10 @@ const Home = () => {
           enablePagination enableRowActions rowActions={rowActions} 
         />
         
-        {/* PayBill Modal */}
+        {isSubscriptionOpen && selection && (
+          <SubscriptionComponent bill={selection} onClose={() => setIsSubscriptionOpen(false)} />
+        )}
+
         {isPayBillOpen && (
           <PayBill bill={selection} onClose={() => setIsPayBillOpen(false)} />
         )}
