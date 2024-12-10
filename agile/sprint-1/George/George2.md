@@ -31,4 +31,5 @@ sequenceDiagram
 
     Note over G,SS: NFR: Adaptable features
     Note over SS,DB: NFR: Secure financial data
+    
 ```

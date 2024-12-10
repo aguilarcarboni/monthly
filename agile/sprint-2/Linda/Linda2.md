@@ -1,16 +1,28 @@
-```mermaid
+```mermaid 
 sequenceDiagram
     participant L as Linda (User)
     participant WB as WebApp 
     participant BC as BillController
+    participant RC as ReminderController
     participant BS as BillService
+    participant NS as NotificationService
+    participant RS as ReminderService
     participant PS as PaymentService
     participant DBH as DatabaseHandler
     participant DB as Database (sqlLite)
 
-    Note over L,DB: Guided Payment Process
-    L->>WB: Getting started button
-    WB-->>L: Step-by-Step Guide (Large Text and Images)
+    Note over L, DB: Proactive Bill Management
+    L->>WB: Access weekly bill overview
+    WB->>DB: Retrieve User Bills
+    DB-->>WB: Linda's bills
+
+    Note over L, NS: Reliable Notification
+    RC->>RS: findDueReminders()
+    RS->>DBH: readReminders()
+    DBH->>DB: read()
+    DB-->>RS: retrieved reminders
+    RS->>NS: sendNotification()
+    NS-->>L: notification sent
 
     Note over L,WB: Actions to Pay
     L->>WB: Initialize Payment for Bill

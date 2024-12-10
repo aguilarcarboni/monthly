@@ -1,4 +1,5 @@
 ```mermaid 
+
 sequenceDiagram
     participant G as George (User)
     participant WB as WebView
