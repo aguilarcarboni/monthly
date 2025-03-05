@@ -21,7 +21,7 @@ rich==13.9.2
 SQLAlchemy==2.0.35
 tenacity==9.0.0
 websocket_client==1.8.0
-Werkzeug==3.0.4
+Werkzeug==3.0.6
 yfinance==0.2.37
 psycopg2-binary==2.9.9
 gunicorn==23.0.0
